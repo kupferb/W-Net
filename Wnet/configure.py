@@ -1,3 +1,4 @@
+import platform
 
 class Config:
     
@@ -12,8 +13,9 @@ class Config:
         for i in range(self.MaxLv-1):
             self.ChNum.append(self.ChNum[-1]*2)
         #data configure
-        self.pascal = "../VOC2012/JPEGImages"
-        self.bsds = "../BSR/BSDS500/data/images/"
+        if platform.system().lower() == 'windows':
+            self.pascal = r"D:\DataSet\PASCAL\VOCdevkit\VOC2012"
+        self.bsds = r"D:\DataSet\BSD\500\BSDS500\data\images"
         self.imagelist = "ImageSets/Segmentation/train.txt"
         self.BatchSize = 6
         self.Shuffle = True

@@ -8,7 +8,7 @@ import pdb
 from configure import Config
 import math
 import cupy as cp
-
+import platform
 config = Config()
 
 class DataLoader():
@@ -21,19 +21,23 @@ class DataLoader():
         self.mode = mode
         #navigate to the image directory
         #images_path = os.path.join(datapath,'images')
-        train_image_path = os.path.join(datapath,mode)
+        # train_image_path = os.path.join(datapath,mode)
+        train_image_path = os.path.join(datapath, 'JPEGImages')
         file_list = []
         if(mode != "train"):
             train_image_regex = os.path.join(train_image_path, '*.jpg')
             file_list = glob.glob(train_image_regex)
         #find all the images
         else:
-            train_list_file = os.path.join("../VOC2012",config.imagelist)
+            if platform.system().lower() == 'windows':
+                train_list_file = os.path.join(r"D:\DataSet\PASCAL\VOCdevkit\VOC2012",config.imagelist)
             with open(train_list_file) as f:
                 for line in f.readlines():
                     file_list.append(os.path.join(train_image_path,line[0:-1]+".jpg"))
         #load the images
-        for file_name in file_list:
+        for k_file, file_name in enumerate(file_list):
+            if k_file %100==0:
+                print(k_file)
             with Image.open(file_name) as image:
                 if image.mode != "RGB":
                     image = image.convert("RGB")
