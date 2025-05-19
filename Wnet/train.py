@@ -34,9 +34,12 @@ if __name__ == '__main__':
         t_adjust = 0.0
         t_reset = 0.0
         t_inloss = 0.0
+        s = time.time()
         for step,[x,w] in enumerate(dataloader):
+
             #NCuts Loss
             #tick = time.time()
+
             x = x.cuda()
             w = w.cuda()
             #for m in torch.arange(50,70,dtype=torch.long):
@@ -47,13 +50,16 @@ if __name__ == '__main__':
             sw = w.sum(-1).sum(-1)
             #t_load += time.time()-tick
             #tick = time.time()
+
             optimizer.zero_grad()
             pred,pad_pred = model(x)
+
             #t_forward += time.time()-tick
             #pred.cuda()
             #tick = time.time()
+
             ncuts_loss = Ncuts(pred,pad_pred,w,sw)
-            ncuts_loss = ncuts_loss.sum()/config.BatchSize 
+            ncuts_loss = ncuts_loss.sum()/config.BatchSize
             #t_loss += time.time()-tick
             #tick = time.time()
             Ave_Ncuts = (Ave_Ncuts * step + ncuts_loss.item())/(step+1)
@@ -73,8 +79,11 @@ if __name__ == '__main__':
             optimizer.step()'''
         #t_total = t_load+t_reset+t_forward+t_loss+t_backward+t_adjust
         print("Ncuts loss: "+str(Ave_Ncuts))#+";total time: "+str(t_total)+";forward: "+str(t_forward/t_total)+";loss: "+str(t_loss/t_total)+";backward: "+str(t_backward/t_total)+";adjust: "+str(t_adjust/t_total)+";reset&load: "+str(t_reset/t_total)+"&"+str(t_load/t_total)+"loss: "+str(t_loss)+" / "+str(t_inloss))
+        print(time.time() - s)
+        s = time.time()
+
         #print("Reconstruction loss: "+str(Ave_Rec))
-        if (epoch+1)%500 == 0:
+        if (epoch+1)%100== 0:
             localtime = time.localtime(time.time())
             checkname = './checkpoints'
             if not os.path.isdir(checkname):
