@@ -15,6 +15,8 @@ class Config:
         #data configure
         if platform.system().lower() == 'windows':
             self.pascal = r"D:\DataSet\PASCAL\VOCdevkit\VOC2012"
+            self.pascal = r"D:\DataSet\PASCAL\VOCdevkit\VOC2012"
+            self.pascal = r'D:\DataSet\DRIVE\training\images_wnet'
         else:
             self.pascal = r"/home/benk/Study/VOC2012"
             self.pascal = r"/home/benk/Downloads/BSDS300-images/BSDS300/images"
@@ -32,7 +34,7 @@ class Config:
         self.init_lr = 0.05
         self.lr_decay = 0.1
         self.lr_decay_iter = 1000
-        self.max_iter = 1000
+        self.max_iter = 500
         self.cuda_dev = 0 
         self.cuda_dev_list = "0,1"
         self.check_iter = 1000
