@@ -37,10 +37,10 @@ if __name__ == '__main__':
         seg = np.moveaxis(np.array(cmap(seg)),0,-1).astype(np.uint8)
         #pdb.set_trace()
         for i in range(seg.shape[0]):
-            Image.fromarray(x[i]).save("./input_"+str(step+1)+"_"+str(i)+".jpg")
+            Image.fromarray(x[i]).save("./images/drive/input_"+str(step+1)+"_"+str(i)+".jpg")
             #for j in range(seg.shape[-1]):
             #pdb.set_trace()
-            Image.fromarray(seg[i,:,:]).save("./seg_"+str(step+1)+"_"+str(i)+".jpg")
+            Image.fromarray(seg[i,:,:]).save("./images/drive/seg_"+str(step+1)+"_"+str(i)+".jpg")
 
 
 
