@@ -9,7 +9,7 @@ class Config:
         self.ConvSize = 3
         self.pad = 1#(self.ConvSize - 1) / 2 
         self.MaxLv = 5
-        self.ChNum = [self.InputCh,64]
+        self.ChNum = [self.InputCh,2]
         for i in range(self.MaxLv-1):
             self.ChNum.append(self.ChNum[-1]*2)
         #data configure
@@ -20,7 +20,7 @@ class Config:
         else:
             self.pascal = r"/home/benk/Study/VOC2012"
             self.pascal = r"/home/benk/Downloads/BSDS300-images/BSDS300/images"
-        self.bsds = r"D:\DataSet\BSD\500\BSDS500\data\images"
+        self.bsds = r"D:\DataSet\DRIVE\test\images_wnet"
         self.imagelist = "ImageSets/Segmentation/train.txt"
         self.imagelist = "iids_train.txt"
 
@@ -43,10 +43,10 @@ class Config:
         self.sigmaI = 10
         self.sigmaX = 4
         #testing configure
-        self.model_tested = "./checkpoint_8_23_13_0_epoch_2000"
+        self.model_tested = "./checkpoints/checkpoints_drive/checkpoint_6_9_14_54_epoch_1000"
         #color library
         self.color_lib = []
-        for r in range(0,256,128):
-            for g in range(0,256,128):
-                for b in range(0,256,128):
+        for r in range(0,256,64):
+            for g in range(0,256,64):
+                for b in range(0,256,64):
                     self.color_lib.append((r,g,b))
