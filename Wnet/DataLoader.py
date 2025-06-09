@@ -34,7 +34,7 @@ class DataLoader():
         else:
             if platform.system().lower() == 'windows':
                 train_list_file = os.path.join(r"D:\DataSet\PASCAL\VOCdevkit\VOC2012",config.imagelist)
-                train_list_file = os.path.join(r"D:\DataSet\DRIVE\training\images_wnet", config.imagelist)
+                train_list_file = os.path.join(r"C:\DataSet\DRIVE\training\images_wnet", config.imagelist)
             else:
                 train_list_file = os.path.join('/home/benk/Study/VOC2012', config.imagelist)
                 train_list_file = os.path.join('/home/benk/Downloads/BSDS300-images/BSDS300', config.imagelist)
