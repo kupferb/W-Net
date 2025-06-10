@@ -9,7 +9,7 @@ class Config:
         self.ConvSize = 3
         self.pad = 1#(self.ConvSize - 1) / 2 
         self.MaxLv = 5
-        self.ChNum = [self.InputCh,2]
+        self.ChNum = [self.InputCh,64]
         for i in range(self.MaxLv-1):
             self.ChNum.append(self.ChNum[-1]*2)
         #data configure
@@ -29,7 +29,7 @@ class Config:
         self.LoadThread = 16
         self.inputsize = [224,224]
         #partition configure
-        self.K = 64
+        self.K = 2
         #training configure
         self.init_lr = 0.05
         self.lr_decay = 0.1
