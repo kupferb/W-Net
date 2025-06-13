@@ -13,7 +13,7 @@ from PIL import Image
 config = Config()
 os.environ["CUDA_VISIBLE_DEVICES"]=config.cuda_dev_list
 if __name__ == '__main__':
-    dataset_type = 'stare'
+    dataset_type = 'drive'
     dataset = DataLoader(config.bsds,"test")
     dataloader = dataset.torch_loader()
     model = WNet()
@@ -41,7 +41,7 @@ if __name__ == '__main__':
             Image.fromarray(x[i]).save(f"./images/{dataset_type}/input_"+str(step+1)+"_"+str(i)+".jpg")
             #for j in range(seg.shape[-1]):
             #pdb.set_trace()
-            Image.fromarray(seg[i,:,:]).save(f"./images/{dataset_type}/seg_"+str(step+1)+"_"+str(i)+".jpg")
+            Image.fromarray(seg[i,:,:]).save(f"./images/{dataset_type}/seg_"+str(step+1)+"_"+str(i)+".png")
 
 
 

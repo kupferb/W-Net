@@ -21,6 +21,7 @@ class Config:
             self.pascal = r"/home/benk/Study/VOC2012"
             self.pascal = r"/home/benk/Downloads/BSDS300-images/BSDS300/images"
         self.bsds = r"D:\DataSet\STARE\test\images_wnet"
+        self.bsds = r"D:\DataSet\DRIVE\test\images_wnet"
         self.imagelist = "ImageSets/Segmentation/train.txt"
         self.imagelist = "iids_train.txt"
 
@@ -43,10 +44,10 @@ class Config:
         self.sigmaI = 10
         self.sigmaX = 4
         #testing configure
-        self.model_tested = "./checkpoints/checkpoints_stare/checkpoint_6_10_11_8_epoch_1000"
+        self.model_tested = "./checkpoints/checkpoints_drive/checkpoint_6_10_16_10_epoch_900"
         #color library
         self.color_lib = []
-        self.color_lib = [(0,0,0),(255,255,255)][::-1]
+        self.color_lib = [(0,0,0),(255,255,255)]
         # for r in range(0,256,64):
         #     for g in range(0,256,64):
         #         for b in range(0,256,64):
