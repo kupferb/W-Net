@@ -28,7 +28,7 @@ class Config:
         self.bsds = r"D:\DataSet\STARE\test\images_wnet"
         self.bsds = r"D:\DataSet\DRIVE\test\images_wnet"
         self.bsds = r"D:\DataSet\BSD\300\BSDS300\images"
-
+        self.dataset = dataset
         self.imagelist = "ImageSets/Segmentation/train.txt"
         self.imagelist = "iids_test.txt"
         self.imagelist = "iids_train.txt"
