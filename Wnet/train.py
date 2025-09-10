@@ -8,11 +8,11 @@ import time
 import os
 
 
-# os.environ["CUDA_VISIBLE_DEVICES"]=config.cuda_dev_list
 device = torch.device("cuda:0")
 if __name__ == '__main__':
     for K in range(2,7):
         config = Config(K)
+        os.environ["CUDA_VISIBLE_DEVICES"] = config.cuda_dev_list
         dataset = DataLoader(config.pascal,"train")
         dataloader = dataset.torch_loader()
         #model = torch.nn.DataParallel(Net(True))

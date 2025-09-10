@@ -35,11 +35,11 @@ class Config:
         #partition configure
         self.K = K
         #training configure
-        self.epochs_to_save = 100
+        self.epochs_to_save = 50
         self.init_lr = 0.05
         self.lr_decay = 0.1
         self.lr_decay_iter = 1000
-        self.max_iter = 1000
+        self.max_iter = 200
         self.cuda_dev = 0 
         self.cuda_dev_list = "0"#"0,1"
         self.check_iter = 1000
