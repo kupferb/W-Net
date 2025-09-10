@@ -8,101 +8,102 @@ import time
 import os
 
 
-device = torch.device("cuda:0")
+device = torch.device("cuda:1")
 if __name__ == '__main__':
-    for K in range(2,7):
-        config = Config(K)
-        os.environ["CUDA_VISIBLE_DEVICES"] = config.cuda_dev_list
-        dataset = DataLoader(config.pascal,"train",config)
-        dataloader = dataset.torch_loader()
-        #model = torch.nn.DataParallel(Net(True))
-        model = torch.nn.DataParallel(WNet(config))
-        model.cuda()
-        #model.to(device)
-        model.train()
-        #optimizer
-        optimizer = torch.optim.SGD(model.parameters(),lr = config.init_lr)
-        #reconstr = torch.nn.MSELoss().cuda(config.cuda_dev)
-        Ncuts = NCutsLoss(config)
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=config.lr_decay_iter, gamma=config.lr_decay)
-        for epoch in range(config.max_iter):
-            print("Epoch: "+str(epoch+1))
-            scheduler.step()
-            Ave_Ncuts = 0.0
-            #Ave_Rec = 0.0
-            t_load = 0.0
-            t_forward = 0.0
-            t_loss = 0.0
-            t_backward = 0.0
-            t_adjust = 0.0
-            t_reset = 0.0
-            t_inloss = 0.0
-            s = time.time()
-            for step,[x,w] in enumerate(dataloader):
+    for ds in ['bsd300','bsd500']:
+        for K in range(2,7):
+            config = Config(K,ds)
+            os.environ["CUDA_VISIBLE_DEVICES"] = config.cuda_dev_list
+            dataset = DataLoader(config.pascal,"train",config)
+            dataloader = dataset.torch_loader()
+            #model = torch.nn.DataParallel(Net(True))
+            model = torch.nn.DataParallel(WNet(config))
+            model.cuda()
+            #model.to(device)
+            model.train()
+            #optimizer
+            optimizer = torch.optim.SGD(model.parameters(),lr = config.init_lr)
+            #reconstr = torch.nn.MSELoss().cuda(config.cuda_dev)
+            Ncuts = NCutsLoss(config)
+            scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=config.lr_decay_iter, gamma=config.lr_decay)
+            for epoch in range(config.max_iter):
+                print("Epoch: "+str(epoch+1))
+                scheduler.step()
+                Ave_Ncuts = 0.0
+                #Ave_Rec = 0.0
+                t_load = 0.0
+                t_forward = 0.0
+                t_loss = 0.0
+                t_backward = 0.0
+                t_adjust = 0.0
+                t_reset = 0.0
+                t_inloss = 0.0
+                s = time.time()
+                for step,[x,w] in enumerate(dataloader):
 
-                #NCuts Loss
-                #tick = time.time()
+                    #NCuts Loss
+                    #tick = time.time()
 
-                x = x.cuda()
-                w = w.cuda()
-                #for m in torch.arange(50,70,dtype=torch.long):
+                    x = x.cuda()
+                    w = w.cuda()
+                    #for m in torch.arange(50,70,dtype=torch.long):
 
-                #    print(m)
-                #    for n in torch.arange(50,70,dtype= torch.long):
-                #        print(w[5,0,m,n])
-                sw = w.sum(-1).sum(-1)
-                #t_load += time.time()-tick
-                #tick = time.time()
+                    #    print(m)
+                    #    for n in torch.arange(50,70,dtype= torch.long):
+                    #        print(w[5,0,m,n])
+                    sw = w.sum(-1).sum(-1)
+                    #t_load += time.time()-tick
+                    #tick = time.time()
 
-                optimizer.zero_grad()
-                pred,pad_pred = model(x)
+                    optimizer.zero_grad()
+                    pred,pad_pred = model(x)
 
-                #t_forward += time.time()-tick
-                #pred.cuda()
-                #tick = time.time()
+                    #t_forward += time.time()-tick
+                    #pred.cuda()
+                    #tick = time.time()
 
-                ncuts_loss = Ncuts(pred,pad_pred,w,sw)
-                ncuts_loss = ncuts_loss.sum()/config.BatchSize
-                #t_loss += time.time()-tick
-                #tick = time.time()
-                Ave_Ncuts = (Ave_Ncuts * step + ncuts_loss.item())/(step+1)
-                #t_reset += time.time()-tick
-                #tick = time.time()
-                ncuts_loss.backward()
-                #t_backward += time.time()-tick
-                #tick = time.time()
-                optimizer.step()
-                #t_adjust += time.time()-tick
-                #Reconstruction Loss
-                '''pred,rec_image = model(x)
-                rec_loss = reconstr(rec_image,x)
-                Ave_Rec = (Ave_Rec * step + rec_loss.item())/(step+1)
-                optimizer.zero_grad()
-                rec_loss.backward()
-                optimizer.step()'''
-            #t_total = t_load+t_reset+t_forward+t_loss+t_backward+t_adjust
-            print("Ncuts loss: "+str(Ave_Ncuts))#+";total time: "+str(t_total)+";forward: "+str(t_forward/t_total)+";loss: "+str(t_loss/t_total)+";backward: "+str(t_backward/t_total)+";adjust: "+str(t_adjust/t_total)+";reset&load: "+str(t_reset/t_total)+"&"+str(t_load/t_total)+"loss: "+str(t_loss)+" / "+str(t_inloss))
-            print(time.time() - s)
-            s = time.time()
+                    ncuts_loss = Ncuts(pred,pad_pred,w,sw)
+                    ncuts_loss = ncuts_loss.sum()/config.BatchSize
+                    #t_loss += time.time()-tick
+                    #tick = time.time()
+                    Ave_Ncuts = (Ave_Ncuts * step + ncuts_loss.item())/(step+1)
+                    #t_reset += time.time()-tick
+                    #tick = time.time()
+                    ncuts_loss.backward()
+                    #t_backward += time.time()-tick
+                    #tick = time.time()
+                    optimizer.step()
+                    #t_adjust += time.time()-tick
+                    #Reconstruction Loss
+                    '''pred,rec_image = model(x)
+                    rec_loss = reconstr(rec_image,x)
+                    Ave_Rec = (Ave_Rec * step + rec_loss.item())/(step+1)
+                    optimizer.zero_grad()
+                    rec_loss.backward()
+                    optimizer.step()'''
+                #t_total = t_load+t_reset+t_forward+t_loss+t_backward+t_adjust
+                print("Ncuts loss: "+str(Ave_Ncuts))#+";total time: "+str(t_total)+";forward: "+str(t_forward/t_total)+";loss: "+str(t_loss/t_total)+";backward: "+str(t_backward/t_total)+";adjust: "+str(t_adjust/t_total)+";reset&load: "+str(t_reset/t_total)+"&"+str(t_load/t_total)+"loss: "+str(t_loss)+" / "+str(t_inloss))
+                print(time.time() - s)
+                s = time.time()
 
-            #print("Reconstruction loss: "+str(Ave_Rec))
-            if (epoch+1)%config.epochs_to_save== 0:
-                localtime = time.localtime(time.time())
-                checkname = f'./checkpoints/bsd300/{config.K}'
-                checkname = f'./checkpoints/bsd500/{config.K}'
-                if not os.path.isdir(checkname):
-                    os.makedirs(checkname)
-                checkname+='/checkpoint'
-                for i in range(1,5):
-                    checkname+='_'+str(localtime[i])
-                checkname += f'_epoch_{epoch+1:04d}'
-                with open(checkname,'wb') as f:
-                    torch.save({
-                        'epoch': epoch +1,
-                        'state_dict': model.module.state_dict(),
-                        'optimizer': optimizer.state_dict(),
-                        'scheduler': scheduler.state_dict(),
-                        'Ncuts': Ave_Ncuts#,
-                        #'recon': Ave_Rec
-                        },f)
-                print(checkname+' saved')
+                #print("Reconstruction loss: "+str(Ave_Rec))
+                if (epoch+1)%config.epochs_to_save== 0:
+                    localtime = time.localtime(time.time())
+                    # checkname = f'./checkpoints/bsd300/{config.K}'
+                    checkname = f'./checkpoints/{ds}/{K}'
+                    if not os.path.isdir(checkname):
+                        os.makedirs(checkname)
+                    checkname+='/checkpoint'
+                    for i in range(1,5):
+                        checkname+='_'+str(localtime[i])
+                    checkname += f'_epoch_{epoch+1:04d}'
+                    with open(checkname,'wb') as f:
+                        torch.save({
+                            'epoch': epoch +1,
+                            'state_dict': model.module.state_dict(),
+                            'optimizer': optimizer.state_dict(),
+                            'scheduler': scheduler.state_dict(),
+                            'Ncuts': Ave_Ncuts#,
+                            #'recon': Ave_Rec
+                            },f)
+                    print(checkname+' saved')

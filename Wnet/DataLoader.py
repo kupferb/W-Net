@@ -40,8 +40,10 @@ class DataLoader():
                 train_list_file = os.path.join(r"D:\DataSet\BSD\300\BSDS300", config.imagelist)
             else:
                 train_list_file = os.path.join('/home/benk/Study/VOC2012', config.imagelist)
-                train_list_file = os.path.join('/home/benk/Downloads/BSDS300-images/BSDS300', config.imagelist)
-                train_list_file = os.path.join('/home/benk/Downloads/BSDS500-images/BSDS500', config.imagelist)
+                if config.dataset=='bsd300':
+                    train_list_file = os.path.join('/home/benk/Downloads/BSDS300-images/BSDS300', config.imagelist)
+                else:
+                    train_list_file = os.path.join('/home/benk/Downloads/BSDS500-images/BSDS500', config.imagelist)
             with open(train_list_file) as f:
                 for line in f.readlines():
                     file_list.append(os.path.join(train_image_path,line[0:-1]+".jpg"))

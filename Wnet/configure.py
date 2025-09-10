@@ -2,7 +2,7 @@ import platform
 
 class Config:
     
-    def __init__(self,K):
+    def __init__(self,K,dataset):
         #network configure
         self.InputCh=3
         self.ScaleRatio = 2
@@ -20,8 +20,10 @@ class Config:
             self.pascal = r"D:\DataSet\BSD\300\BSDS300\images"
         else:
             self.pascal = r"/home/benk/Study/VOC2012"
-            self.pascal = r"/home/benk/Downloads/BSDS300-images/BSDS300/images"
-            self.pascal = r"/home/benk/Downloads/BSDS500-images/BSDS500/images"
+            if dataset=='bsd300':
+                self.pascal = r"/home/benk/Downloads/BSDS300-images/BSDS300/images"
+            else:
+                self.pascal = r"/home/benk/Downloads/BSDS500-images/BSDS500/images"
         #test
         self.bsds = r"D:\DataSet\STARE\test\images_wnet"
         self.bsds = r"D:\DataSet\DRIVE\test\images_wnet"
