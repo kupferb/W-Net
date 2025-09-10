@@ -21,10 +21,12 @@ class Config:
         else:
             self.pascal = r"/home/benk/Study/VOC2012"
             self.pascal = r"/home/benk/Downloads/BSDS300-images/BSDS300/images"
+            self.pascal = r"/home/benk/Downloads/BSDS500-images/BSDS500/images"
         #test
         self.bsds = r"D:\DataSet\STARE\test\images_wnet"
         self.bsds = r"D:\DataSet\DRIVE\test\images_wnet"
         self.bsds = r"D:\DataSet\BSD\300\BSDS300\images"
+
         self.imagelist = "ImageSets/Segmentation/train.txt"
         self.imagelist = "iids_train.txt"
 

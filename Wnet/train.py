@@ -89,6 +89,7 @@ if __name__ == '__main__':
             if (epoch+1)%config.epochs_to_save== 0:
                 localtime = time.localtime(time.time())
                 checkname = f'./checkpoints/bsd300/{config.K}'
+                checkname = f'./checkpoints/bsd500/{config.K}'
                 if not os.path.isdir(checkname):
                     os.makedirs(checkname)
                 checkname+='/checkpoint'
