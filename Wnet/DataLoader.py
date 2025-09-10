@@ -45,6 +45,8 @@ class DataLoader():
                 for line in f.readlines():
                     file_list.append(os.path.join(train_image_path,line[0:-1]+".jpg"))
         #load the images
+        im_names = []
+        im_sizes = []
         for k_file, file_name in enumerate(file_list):
             if k_file %100==0:
                 print(k_file)
@@ -52,11 +54,14 @@ class DataLoader():
                 if image.mode != "RGB":
                     image = image.convert("RGB")
                 self.raw_data.append(np.array(image.resize((config.inputsize[0],config.inputsize[1]),Image.BILINEAR)))
+                im_names.append(os.path.basename(file_name)[:-4])
+                im_sizes.append(image.size)
         #resize and align
         self.scale()
         #normalize
         self.transfer()
-        
+        self.im_names = im_names
+        self.im_sizes = im_sizes
         #calculate weights by 2
         if(mode == "train"):
             self.dataset = self.get_dataset(self.raw_data, self.raw_data.shape,75)
@@ -75,11 +80,11 @@ class DataLoader():
         #for i in range(self.raw_data.shape[0]):
         #    Image.fromarray(self.raw_data[i].swapaxes(0,-1).astype(np.uint8)).save("./reconstruction/input_"+str(i)+".jpg")
 
-    def torch_loader(self):
+    def torch_loader(self,shuffle=True):
         return Data.DataLoader(
                                 self.dataset,
                                 batch_size = config.BatchSize,
-                                shuffle = config.Shuffle,
+                                shuffle = shuffle,
                                 num_workers = config.LoadThread,
                                 pin_memory = True,
                             )

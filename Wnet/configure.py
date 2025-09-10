@@ -28,7 +28,7 @@ class Config:
         self.bsds = r"D:\DataSet\BSD\300\BSDS300\images"
 
         self.imagelist = "ImageSets/Segmentation/train.txt"
-        self.imagelist = "iids_train.txt"
+        self.imagelist = "iids_test.txt"
 
         self.BatchSize = 10
         self.Shuffle = True
@@ -55,6 +55,7 @@ class Config:
         #color library
         self.color_lib = []
         self.color_lib = [(0,0,0),(255,255,255)]
+        self.color_lib = [(x+1,x+1,x+1) for x in range(self.K)]
         # for r in range(0,256,64):
         #     for g in range(0,256,64):
         #         for b in range(0,256,64):
