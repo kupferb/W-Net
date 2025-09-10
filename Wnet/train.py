@@ -83,15 +83,15 @@ if __name__ == '__main__':
         s = time.time()
 
         #print("Reconstruction loss: "+str(Ave_Rec))
-        if (epoch+1)%100== 0:
+        if (epoch+1)%config.epochs_to_save== 0:
             localtime = time.localtime(time.time())
-            checkname = './checkpoints'
+            checkname = f'./checkpoints/bsd300/{config.K}'
             if not os.path.isdir(checkname):
-                os.mkdir(checkname)
+                os.makedirs(checkname)
             checkname+='/checkpoint'
             for i in range(1,5):
                 checkname+='_'+str(localtime[i])
-            checkname += '_epoch_'+str(epoch+1)
+            checkname += f'_epoch_{epoch+1:04d}'
             with open(checkname,'wb') as f:
                 torch.save({
                     'epoch': epoch +1,

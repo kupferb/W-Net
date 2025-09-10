@@ -13,7 +13,11 @@ from PIL import Image
 config = Config()
 os.environ["CUDA_VISIBLE_DEVICES"]=config.cuda_dev_list
 if __name__ == '__main__':
-    dataset_type = 'drive'
+    # dataset_type = 'drive'
+    dataset_type = 'bsd300'
+    dir_ = os.path.join('.','images',dataset_type)
+    if not os.path.isdir(dir_):
+        os.makedirs(dir_)
     dataset = DataLoader(config.bsds,"test")
     dataloader = dataset.torch_loader()
     model = WNet()

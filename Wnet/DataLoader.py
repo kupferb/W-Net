@@ -24,8 +24,9 @@ class DataLoader():
         # train_image_path = os.path.join(datapath,mode)
         if platform.system().lower() == 'windows':
             train_image_path = os.path.join(datapath, 'JPEGImages')
+            train_image_path = os.path.join(datapath, mode)
         else:
-            train_image_path = os.path.join(datapath, 'train')
+            train_image_path = os.path.join(datapath, mode)
         file_list = []
         if(mode != "train"):
             train_image_regex = os.path.join(train_image_path, '*.jpg')
@@ -35,6 +36,7 @@ class DataLoader():
             if platform.system().lower() == 'windows':
                 train_list_file = os.path.join(r"D:\DataSet\PASCAL\VOCdevkit\VOC2012",config.imagelist)
                 train_list_file = os.path.join(r"C:\DataSet\DRIVE\training\images_wnet", config.imagelist)
+                train_list_file = os.path.join(r"D:\DataSet\BSD\300\BSDS300", config.imagelist)
             else:
                 train_list_file = os.path.join('/home/benk/Study/VOC2012', config.imagelist)
                 train_list_file = os.path.join('/home/benk/Downloads/BSDS300-images/BSDS300', config.imagelist)
