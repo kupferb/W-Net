@@ -8,12 +8,13 @@ import subprocess
 import numpy as np
 from configure import Config
 
-config = Config()
+# config = Config()
 
 class NCutsLoss(nn.Module):
-    def __init__(self):
+    def __init__(self,config):
         super(NCutsLoss,self).__init__()
         self.gpu_list = []
+        self.config = config
         '''
         for i in range(torch.cuda.device_count()):
             self.gpu_list.append(torch.cuda.device(i))
@@ -40,9 +41,9 @@ class NCutsLoss(nn.Module):
     def forward(self, seg, padded_seg, weight,sum_weight):
         #too many values to unpack
         cropped_seg = []
-        for m in torch.arange((config.radius-1)*2+1,dtype=torch.long):
+        for m in torch.arange((self.config.radius-1)*2+1,dtype=torch.long):
             column = []
-            for n in torch.arange((config.radius-1)*2+1,dtype=torch.long):
+            for n in torch.arange((self.config.radius-1)*2+1,dtype=torch.long):
                 column.append(padded_seg[:,:,m:m+seg.size()[2],n:n+seg.size()[3]].clone())
             cropped_seg.append(torch.stack(column,4))
         cropped_seg = torch.stack(cropped_seg,4)
@@ -62,7 +63,7 @@ class NCutsLoss(nn.Module):
         assocV = multi3.view(multi3.shape[0],multi3.shape[1],-1).sum(-1)
         assoc = assocA.div(assocV).sum(-1)
         
-        return torch.add(-assoc,config.K)
+        return torch.add(-assoc,self.config.K)
         
     '''def crop_seg(self,seg):
         cropped_seg = torch.zeros(seg.size()[0],seg.size()[1],seg.size()[2],seg.size()[3],(config.radius-1)*2+1,(config.radius-1)*2+1)

@@ -9,16 +9,17 @@ from configure import Config
 import math
 import cupy as cp
 import platform
-config = Config()
+# config = Config()
 
 class DataLoader():
     #initialization
     #datapath : the data folder of bsds500
     #mode : train/test/val
-    def __init__(self, datapath,mode):
+    def __init__(self, datapath,mode,config):
         #image container
         self.raw_data = []
         self.mode = mode
+        self.config = config
         #navigate to the image directory
         #images_path = os.path.join(datapath,'images')
         # train_image_path = os.path.join(datapath,mode)
@@ -83,9 +84,9 @@ class DataLoader():
     def torch_loader(self,shuffle=True):
         return Data.DataLoader(
                                 self.dataset,
-                                batch_size = config.BatchSize,
+                                batch_size = self.config.BatchSize,
                                 shuffle = shuffle,
-                                num_workers = config.LoadThread,
+                                num_workers = self.config.LoadThread,
                                 pin_memory = True,
                             )
 
@@ -93,20 +94,20 @@ class DataLoader():
         #According to the weight formula, when Euclidean distance < r,the weight is 0, so reduce the dissim matrix size to radius-1 to save time and space.
         print("calculating weights.")
 
-        dissim = cp.zeros((shape[0],shape[1],shape[2],shape[3],(config.radius-1)*2+1,(config.radius-1)*2+1))
+        dissim = cp.zeros((shape[0],shape[1],shape[2],shape[3],(self.config.radius-1)*2+1,(self.config.radius-1)*2+1))
         data = cp.asarray(raw_data)
-        padded_data = cp.pad(data,((0,0),(0,0),(config.radius-1,config.radius-1),(config.radius-1,config.radius-1)),'constant')
-        for m in range(2*(config.radius-1)+1):
-            for n in range(2*(config.radius-1)+1):
+        padded_data = cp.pad(data,((0,0),(0,0),(self.config.radius-1,self.config.radius-1),(self.config.radius-1,self.config.radius-1)),'constant')
+        for m in range(2*(self.config.radius-1)+1):
+            for n in range(2*(self.config.radius-1)+1):
                 dissim[:,:,:,:,m,n] = data-padded_data[:,:,m:shape[2]+m,n:shape[3]+n]
         #for i in range(dissim.shape[0]):
         #dissim = -cp.power(dissim,2).sum(1,keepdims = True)/config.sigmaI/config.sigmaI
-        temp_dissim = cp.exp(-cp.power(dissim,2).sum(1,keepdims = True)/config.sigmaI**2)
-        dist = cp.zeros((2*(config.radius-1)+1,2*(config.radius-1)+1))
-        for m in range(1-config.radius,config.radius):
-            for n in range(1-config.radius,config.radius):
-                if m**2+n**2<config.radius**2:
-                    dist[m+config.radius-1,n+config.radius-1] = cp.exp(-(m**2+n**2)/config.sigmaX**2)
+        temp_dissim = cp.exp(-cp.power(dissim,2).sum(1,keepdims = True)/self.config.sigmaI**2)
+        dist = cp.zeros((2*(self.config.radius-1)+1,2*(self.config.radius-1)+1))
+        for m in range(1-self.config.radius,self.config.radius):
+            for n in range(1-self.config.radius,self.config.radius):
+                if m**2+n**2<self.config.radius**2:
+                    dist[m+self.config.radius-1,n+self.config.radius-1] = cp.exp(-(m**2+n**2)/self.config.sigmaX**2)
         #for m in range(0,config.radius-1):
         #    temp_dissim[:,:,m,:,0:config.radius-1-m,:]=0.0
         #    temp_dissim[:,:,-1-m,:,m-config.radius+1:-1,:]=0.0

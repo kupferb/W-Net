@@ -13,17 +13,17 @@ if __name__ == '__main__':
     for K in range(2,7):
         config = Config(K)
         os.environ["CUDA_VISIBLE_DEVICES"] = config.cuda_dev_list
-        dataset = DataLoader(config.pascal,"train")
+        dataset = DataLoader(config.pascal,"train",config)
         dataloader = dataset.torch_loader()
         #model = torch.nn.DataParallel(Net(True))
-        model = torch.nn.DataParallel(WNet())
+        model = torch.nn.DataParallel(WNet(config))
         model.cuda()
         #model.to(device)
         model.train()
         #optimizer
         optimizer = torch.optim.SGD(model.parameters(),lr = config.init_lr)
         #reconstr = torch.nn.MSELoss().cuda(config.cuda_dev)
-        Ncuts = NCutsLoss()
+        Ncuts = NCutsLoss(config)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=config.lr_decay_iter, gamma=config.lr_decay)
         for epoch in range(config.max_iter):
             print("Epoch: "+str(epoch+1))

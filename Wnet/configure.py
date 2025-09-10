@@ -2,7 +2,7 @@ import platform
 
 class Config:
     
-    def __init__(self,K=2):
+    def __init__(self,K):
         #network configure
         self.InputCh=3
         self.ScaleRatio = 2
@@ -29,6 +29,8 @@ class Config:
 
         self.imagelist = "ImageSets/Segmentation/train.txt"
         self.imagelist = "iids_test.txt"
+        self.imagelist = "iids_train.txt"
+
 
         self.BatchSize = 10
         self.Shuffle = True

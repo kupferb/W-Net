@@ -4,13 +4,14 @@ import torch.nn.functional as functional
 from configure import Config
 import pdb
 from Ncuts import NCutsLoss
-config = Config()
+# config = Config()
 
 class WNet(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, config):
         super(WNet, self).__init__()
         self.feature1 = []
         self.feature2 = []
+        self.config = config
         bias = True
         #U-Net1
         #module1
@@ -70,12 +71,12 @@ class WNet(torch.nn.Module):
         self.feature1 = [x]
         #U-Net1
         self.feature1.append(self.module[0](x))
-        for i in range(1,config.MaxLv):
+        for i in range(1,self.config.MaxLv):
             tempf = self.maxpool1[i-1](self.feature1[-1])
             self.feature1.append(self.module[i](tempf))
-        for i in range(config.MaxLv,2*config.MaxLv-2):
-            tempf = self.uconv1[i-config.MaxLv](self.feature1[-1])
-            tempf = torch.cat((self.feature1[2*config.MaxLv-i-1],tempf),dim=1)
+        for i in range(self.config.MaxLv,2*self.config.MaxLv-2):
+            tempf = self.uconv1[i-self.config.MaxLv](self.feature1[-1])
+            tempf = torch.cat((self.feature1[2*self.config.MaxLv-i-1],tempf),dim=1)
             self.feature1.append(self.module[i](tempf))
         tempf = self.uconv1[-1](self.feature1[-1])
         tempf = torch.cat((self.feature1[1],tempf),dim=1)
@@ -132,7 +133,7 @@ class WNet(torch.nn.Module):
 
 
 
-config = Config()
+# config = Config()
 def add_conv_stage(dim_in, dim_out, kernel_size=3, stride=1, padding=1, bias=True, useBN=False):
   if useBN:
     return nn.Sequential(
@@ -167,7 +168,7 @@ def upsample(ch_coarse, ch_fine):
   )
 
 class Net(nn.Module):
-  def __init__(self, useBN=False):
+  def __init__(self, config, useBN=False):
     super(Net, self).__init__()
 
     self.conv1   = add_conv_stage(config.InputCh, 32, useBN=useBN)
