@@ -2,7 +2,7 @@ import platform
 
 class Config:
     
-    def __init__(self):
+    def __init__(self,K=2):
         #network configure
         self.InputCh=3
         self.ScaleRatio = 2
@@ -33,15 +33,15 @@ class Config:
         self.LoadThread = 16
         self.inputsize = [224,224]
         #partition configure
-        self.K = 2
+        self.K = K
         #training configure
         self.epochs_to_save = 100
         self.init_lr = 0.05
         self.lr_decay = 0.1
         self.lr_decay_iter = 1000
-        self.max_iter = 2#1000
+        self.max_iter = 1000
         self.cuda_dev = 0 
-        self.cuda_dev_list = "0,1"
+        self.cuda_dev_list = "0"#"0,1"
         self.check_iter = 1000
         #Ncuts Loss configure
         self.radius = 4
