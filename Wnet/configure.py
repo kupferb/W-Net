@@ -2,7 +2,7 @@ import platform
 
 class Config:
     
-    def __init__(self,K,dataset):
+    def __init__(self,K,dataset,bsds=r"D:\DataSet\BSD\300\BSDS300\images"):
         #network configure
         self.InputCh=3
         self.ScaleRatio = 2
@@ -27,7 +27,7 @@ class Config:
         #test
         self.bsds = r"D:\DataSet\STARE\test\images_wnet"
         self.bsds = r"D:\DataSet\DRIVE\test\images_wnet"
-        self.bsds = r"D:\DataSet\BSD\300\BSDS300\images"
+        self.bsds = bsds
         self.dataset = dataset
         self.imagelist = "ImageSets/Segmentation/train.txt"
         self.imagelist = "iids_test.txt"
